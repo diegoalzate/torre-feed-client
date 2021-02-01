@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./pages/Home";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Navbar from "./components/Navbar";
@@ -8,7 +10,9 @@ import AuthRoute from "./util/AuthRoute";
 import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import "./App.css";
-
+import { SET_AUTHENTICATED } from "./redux/types";
+import { logoutUser, getUserData } from "./redux/actions/userActions";
+import axios from "axios";
 const darkTheme = createMuiTheme({
   palette: {
     primary: {
@@ -29,14 +33,17 @@ if (token) {
   if (decodedToken.exp * 1000 < Date.now()) {
     window.location.href = "/login";
     authenticated = false;
+    store.dispatch(logoutUser());
   } else {
-    authenticated = true;
+    store.dispatch({ type: SET_AUTHENTICATED });
+    axios.defaults.headers.common["Authorization"] = token;
+    store.dispatch(getUserData());
   }
 }
 function App() {
   return (
     <MuiThemeProvider theme={darkTheme}>
-      <div className="App">
+      <Provider store={store}>
         <Router>
           <Navbar />
           <div className="container">
@@ -57,7 +64,7 @@ function App() {
             </Switch>
           </div>
         </Router>
-      </div>
+      </Provider>
     </MuiThemeProvider>
   );
 }

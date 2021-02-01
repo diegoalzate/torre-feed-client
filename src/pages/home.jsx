@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Post from "../components/Post";
 import axios from "axios";
-function Home() {
+import JobsDashboard from "../components/JobsDashboard";
+function Home(props) {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     axios
@@ -23,7 +24,7 @@ function Home() {
   return (
     <Grid container spacing={10}>
       <Grid item sm={4} xs={12}>
-        Jobs
+        <JobsDashboard />
       </Grid>
       <Grid item sm={8} xs={12}>
         {loading}
@@ -31,4 +32,5 @@ function Home() {
     </Grid>
   );
 }
+
 export default Home;

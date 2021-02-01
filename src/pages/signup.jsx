@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import AppIcon from "../images/icon.png";
 import { Link } from "react-router-dom";
@@ -8,36 +8,39 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { TextField, Button, useRadioGroup } from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import axios from "axios";
+import useIsMount from "../util/useIsMount";
+//Redux Stuff
+
+import { connect } from "react-redux";
+import { signupUser } from "../redux/actions/userActions";
 
 const styles = themeFile;
 function SignUp(props) {
+  const isMount = useIsMount();
+
   const [signup, setSignup] = useState({
     email: "",
     password: "",
     confirmPassword: "",
     handle: "",
+    errors: {},
   });
-  const [errors, setErrors] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { classes } = props;
+
+  useEffect(() => {
+    if (!isMount) {
+      if (props.ui.errors !== null) {
+        setSignup({ ...signup, errors: props.ui.errors });
+      }
+    }
+  }, props.ui.errors);
+  const {
+    classes,
+    ui: { loading },
+  } = props;
   const handleSubmit = (event) => {
     event.preventDefault();
-    setLoading(true);
     const user = { ...signup };
-    axios
-      .post("/signup", user)
-      .then((res) => {
-        console.log(res.data);
-        localStorage.setItem("FBIdToken", `Bearer ${res.data.token}`);
-        setLoading(false);
-        props.history.push("/");
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-        setErrors(err.response.data);
-      });
+    props.signupUser(user, props.history);
   };
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -59,8 +62,8 @@ function SignUp(props) {
               type="email"
               label="Email"
               className={classes.textField}
-              error={errors.email ? true : false}
-              helperText={errors.email}
+              error={signup.errors.email ? true : false}
+              helperText={signup.errors.email}
               value={signup.email}
               onChange={handleChange}
             />
@@ -70,8 +73,8 @@ function SignUp(props) {
               name="password"
               type="password"
               label="Password"
-              error={errors.email ? true : false}
-              helperText={errors.password}
+              error={signup.errors.password ? true : false}
+              helperText={signup.errors.password}
               className={classes.textField}
               value={signup.password}
               onChange={handleChange}
@@ -82,8 +85,8 @@ function SignUp(props) {
               name="confirmPassword"
               type="password"
               label="Confirm Password"
-              error={errors.email ? true : false}
-              helperText={errors.confirmPassword}
+              error={signup.errors.confirmPassword ? true : false}
+              helperText={signup.errors.confirmPassword}
               className={classes.textField}
               value={signup.confirmPassword}
               onChange={handleChange}
@@ -94,15 +97,15 @@ function SignUp(props) {
               name="handle"
               type="text"
               label="Username"
-              error={errors.email ? true : false}
-              helperText={errors.handle}
+              error={signup.errors.handle ? true : false}
+              helperText={signup.errors.handle}
               className={classes.textField}
               value={signup.handle}
               onChange={handleChange}
             />
-            {errors.general && (
+            {signup.errors.general && (
               <Typography variant="body2" className={classes.customError}>
-                {errors.general}
+                {signup.errors.general}
               </Typography>
             )}
             <Button
@@ -126,4 +129,16 @@ function SignUp(props) {
     </Grid>
   );
 }
-export default withStyles(styles)(SignUp);
+const mapStateToProps = (state) => ({
+  user: state.user,
+  ui: state.ui,
+});
+
+const mapActionsToProps = {
+  signupUser,
+};
+
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(withStyles(styles)(SignUp));
