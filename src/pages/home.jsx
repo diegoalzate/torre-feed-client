@@ -8,7 +8,6 @@ function Home() {
     axios
       .get("/posts")
       .then((res) => {
-        console.log(res.data);
         setPosts(res.data);
       })
       .catch((err) => {
@@ -24,10 +23,10 @@ function Home() {
   return (
     <Grid container spacing={10}>
       <Grid item sm={4} xs={12}>
-        {loading}
+        Jobs
       </Grid>
       <Grid item sm={8} xs={12}>
-        Content
+        {loading}
       </Grid>
     </Grid>
   );
