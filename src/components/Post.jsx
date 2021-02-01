@@ -1,6 +1,8 @@
 import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Link } from "react-router-dom";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 //MUI STUFF
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -28,6 +30,7 @@ const styles = {
   },
 };
 function Post(props) {
+  dayjs.extend(relativeTime);
   const {
     classes,
     post: { text, createdAt, userHandle, postId, likeCount, commentCount },
@@ -44,7 +47,7 @@ function Post(props) {
           {userHandle}
         </Typography>
         <Typography variant="body2" color="secondary">
-          {createdAt}
+          {dayjs(createdAt).fromNow()}
         </Typography>
         <Typography variant="body1" className={classes.contrastText}>
           {text}
