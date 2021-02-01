@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import home from "./pages/Home";
-import login from "./pages/Login";
-import signup from "./pages/Signup";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import Navbar from "./components/Navbar";
 import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
@@ -10,11 +10,11 @@ import "./App.css";
 const darkTheme = createMuiTheme({
   palette: {
     primary: {
-      main: "#0B0B0B",
+      main: "#27292D",
       contrastText: "#CDDC39",
     },
     secondary: {
-      main: "#27292D",
+      main: "#5E626B",
     },
   },
 });
@@ -26,9 +26,9 @@ function App() {
           <Navbar />
           <div className="container">
             <Switch>
-              <Route exact path="/" component={home} />
-              <Route exact path="/login" component={login} />
-              <Route exact path="/signup" component={signup} />
+              <Route exact path="/" component={Home} />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/signup" component={Signup} />
             </Switch>
           </div>
         </Router>

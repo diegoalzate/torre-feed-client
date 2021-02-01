@@ -17,10 +17,10 @@ function Home() {
   }, []);
 
   const createPost = (post) => {
-    return <Post post={post} />;
+    return <Post post={post} key={post.postId} />;
   };
   let loading = posts ? posts.map(createPost) : <p>Loading...</p>;
-  console.log(loading);
+
   return (
     <Grid container spacing={10}>
       <Grid item sm={4} xs={12}>

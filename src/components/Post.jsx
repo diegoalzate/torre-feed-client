@@ -1,6 +1,6 @@
 import React from "react";
-import { withStyles } from "@material-ui/core/styles/withStyles";
-
+import withStyles from "@material-ui/core/styles/withStyles";
+import { Link } from "react-router-dom";
 //MUI STUFF
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -11,7 +11,20 @@ import Typography from "@material-ui/core/Typography";
 
 const styles = {
   card: {
-    display: "flex",
+    backgroundColor: "#27292D",
+    marginBottom: 20,
+  },
+  content: {
+    padding: 25,
+  },
+  userText: {
+    color: "#CDDC39",
+  },
+  contrastText: {
+    color: "#EAEAEA",
+  },
+  image: {
+    minWidth: 200,
   },
 };
 function Post(props) {
@@ -20,13 +33,22 @@ function Post(props) {
     post: { text, createdAt, userHandle, postId, likeCount, commentCount },
   } = props;
   return (
-    <Card>
-      <CardContent>
-        <Typography variant="h5">{userHandle}</Typography>
-        <Typography variant="body2" color="textSecondary">
+    <Card className={classes.card}>
+      <CardContent className={classes.content}>
+        <Typography
+          className={classes.userText}
+          variant="h5"
+          component={Link}
+          to={`/users/${userHandle}`}
+        >
           {userHandle}
         </Typography>
-        <Typography variant="body1">{text}</Typography>
+        <Typography variant="body2" color="secondary">
+          {createdAt}
+        </Typography>
+        <Typography variant="body1" className={classes.contrastText}>
+          {text}
+        </Typography>
       </CardContent>
     </Card>
   );
