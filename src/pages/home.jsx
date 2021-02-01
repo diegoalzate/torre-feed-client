@@ -3,6 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import Post from "../components/Post";
 import axios from "axios";
 import JobsDashboard from "../components/JobsDashboard";
+import CreatePost from "../components/CreatePost";
 function Home(props) {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
@@ -27,6 +28,7 @@ function Home(props) {
         <JobsDashboard />
       </Grid>
       <Grid item sm={8} xs={12}>
+        <CreatePost />
         {loading}
       </Grid>
     </Grid>

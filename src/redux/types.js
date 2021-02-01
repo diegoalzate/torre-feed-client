@@ -11,3 +11,5 @@ export const LOADING_UI = "LOADING_UI";
 export const CLEAR_ERRORS = "CLEAR_ERRORS";
 //DATA REDUCER TYPES
 export const SET_JOBS = "SET_JOBS";
+export const JOBS_LOADING = "JOBS_LOADING";
+export const POST_POST = "POST_POST";
