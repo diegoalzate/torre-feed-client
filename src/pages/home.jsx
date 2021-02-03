@@ -4,18 +4,17 @@ import Post from "../components/Post";
 import axios from "axios";
 import JobsDashboard from "../components/JobsDashboard";
 import CreatePost from "../components/CreatePost";
+import { connect } from "react-redux";
+import { getPosts } from "../redux/actions/dataActions";
 function Home(props) {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
-    axios
-      .get("/posts")
-      .then((res) => {
-        setPosts(res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    props.getPosts();
+    setPosts(props.data.posts);
   }, []);
+  useEffect(() => {
+    setPosts(props.data.posts);
+  }, [props.data.posts]);
 
   const createPost = (post) => {
     return <Post post={post} key={post.postId} />;
@@ -35,4 +34,10 @@ function Home(props) {
   );
 }
 
-export default Home;
+const mapStateToProps = (state) => ({
+  data: state.data,
+});
+const mapActionsToProps = {
+  getPosts,
+};
+export default connect(mapStateToProps, mapActionsToProps)(Home);

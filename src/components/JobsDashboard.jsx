@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { getJobs } from "../redux/actions/dataActions";
 import { makeStyles } from "@material-ui/core/styles";
 import JobPreview from "./JobPreview";
+import Profile from "./Profile";
 // MUI stuff
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -31,6 +32,14 @@ const useStyles = makeStyles({
   title: {
     color: "#CDDC39",
   },
+  empty: {
+    padding: "10%",
+    backgroundColor: "#27292D",
+    borderRadius: "20px",
+  },
+  button: {
+    margin: "20px",
+  },
 });
 
 function JobsDashboard(props) {
@@ -47,16 +56,22 @@ function JobsDashboard(props) {
     if (props.user.authenticated) {
       setJobs(props.getJobs());
     }
-  }, []);
+  }, [authenticated]);
   let allJobs = jobs.map((j) => {
     return <JobPreview title={j.title} url={j.url} type={j.type} />;
   });
   let jobMarkup = !loading ? (
     authenticated ? (
-      allJobs
+      <div>
+        <h1 className={classes.title}>Profile</h1>
+
+        <Profile />
+        <h1 className={classes.title}>Best Jobs for you</h1>
+        {allJobs}
+      </div>
     ) : (
-      <Paper>
-        <Typography variant="body2" align="center">
+      <Paper class={classes.empty} r>
+        <Typography variant="body2" color="secondary" align="center">
           No profile found, please login again
         </Typography>
         <div>
@@ -65,6 +80,7 @@ function JobsDashboard(props) {
             color="primary"
             component={Link}
             to="/login"
+            className={classes.button}
           >
             Login
           </Button>
@@ -73,6 +89,7 @@ function JobsDashboard(props) {
             color="secondary"
             component={Link}
             to="/signup"
+            className={classes.button}
           >
             Signup
           </Button>
@@ -82,12 +99,7 @@ function JobsDashboard(props) {
   ) : (
     <CircularProgress size={30} />
   );
-  return (
-    <div>
-      <h1 className={classes.title}>Best Jobs for you</h1>
-      {jobMarkup}
-    </div>
-  );
+  return <div>{jobMarkup}</div>;
 }
 
 const mapStateToProps = (state) => ({

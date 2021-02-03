@@ -8,8 +8,9 @@ import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
+import DeletePost from "./DeletePost";
 import Typography from "@material-ui/core/Typography";
+import { connect } from "react-redux";
 
 const styles = {
   card: {
@@ -33,21 +34,19 @@ function Post(props) {
   dayjs.extend(relativeTime);
   const {
     classes,
-    post: { text, createdAt, userHandle, postId, likeCount, commentCount },
+    post: { text, createdAt, userHandle, postId },
   } = props;
+
+  const deleteButton =
+    userHandle === props.handle ? <DeletePost postId={postId} /> : null;
   return (
     <Card className={classes.card}>
       <CardContent className={classes.content}>
-        <Typography
-          className={classes.userText}
-          variant="h5"
-          component={Link}
-          to={`/users/${userHandle}`}
-        >
+        <Typography className={classes.userText} variant="h5">
           {userHandle}
         </Typography>
         <Typography variant="body2" color="secondary">
-          {dayjs(createdAt).fromNow()}
+          {dayjs(createdAt).fromNow()} {deleteButton}
         </Typography>
         <Typography variant="body1" className={classes.contrastText}>
           {text}
@@ -56,4 +55,8 @@ function Post(props) {
     </Card>
   );
 }
-export default withStyles(styles)(Post);
+const mapStateToProps = (state) => ({
+  autenticated: state.user.authenticated,
+  handle: state.user.credentials.handle,
+});
+export default connect(mapStateToProps)(withStyles(styles)(Post));

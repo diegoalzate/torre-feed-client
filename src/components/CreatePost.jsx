@@ -18,6 +18,7 @@ const styles = (theme) => ({
   submitButton: {
     position: "relative",
     float: "right",
+    color: "#CDDC39",
     marginTop: 10,
   },
   progressSpinner: {
@@ -27,6 +28,10 @@ const styles = (theme) => ({
     position: "absolute",
     left: "91%",
     top: "6%",
+  },
+  postText: {
+    color: "#CDDC39",
+    marginRight: "20px",
   },
 });
 
@@ -44,7 +49,7 @@ function CreatePost(props) {
     if (!props.ui.errors) {
       setPost({ ...post, text: "", open: false, errors: {} });
     }
-  }, []);
+  }, [props.data.jobs]);
 
   const handleOpen = () => {
     setPost({ ...post, open: true });
@@ -58,6 +63,7 @@ function CreatePost(props) {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
+    setPost({ ...post, open: false });
     props.postPost({ text: post.text });
   };
 
@@ -65,7 +71,9 @@ function CreatePost(props) {
   return (
     <Fragment>
       <MyButton onClick={handleOpen} tip="Post!">
-        <AddIcon />
+        <div className={classes.postText}>
+          <AddIcon className={classes.submitButton} />
+        </div>
       </MyButton>
       <Dialog open={post.open} onClose={handleClose} fullWidth maxWidth="sm">
         <MyButton
@@ -107,6 +115,7 @@ function CreatePost(props) {
 }
 
 const mapStateToProps = (state) => ({
+  data: state.ui,
   ui: state.ui,
 });
 

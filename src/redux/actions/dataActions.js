@@ -4,18 +4,34 @@ import {
   POST_POST,
   SET_ERRORS,
   CLEAR_ERRORS,
+  DELETE_POST,
+  GET_POSTS,
 } from "../types";
 import axios from "axios";
-
+export const getPosts = () => (dispatch) => {
+  axios
+    .get("/posts")
+    .then((res) => {
+      dispatch({
+        type: GET_POSTS,
+        payload: res.data,
+      });
+      dispatch(clearErrors());
+    })
+    .catch((err) => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};
 export const getJobs = () => (dispatch) => {
   let simpleJobs = [];
   dispatch({ type: JOBS_LOADING });
   axios
     .post("/jobs")
     .then((res) => {
-      console.log(res.data);
       res.data.forEach((job) => {
-        console.log(job);
         let jobPreview = {};
         jobPreview.url = `https://torre.co/jobs/${job.id}`;
         jobPreview.title = job.objective;
@@ -25,7 +41,6 @@ export const getJobs = () => (dispatch) => {
       return simpleJobs;
     })
     .then((res) => {
-      console.log(res);
       dispatch({ type: SET_JOBS, payload: res });
     })
     .catch((err) => {
@@ -58,4 +73,13 @@ export const postPost = (newPost) => (dispatch) => {
 
 export const clearErrors = () => (dispatch) => {
   dispatch({ type: CLEAR_ERRORS });
+};
+
+export const deletePost = (postId) => (dispatch) => {
+  axios
+    .delete(`/post/${postId}`)
+    .then(() => {
+      dispatch({ type: DELETE_POST, payload: postId });
+    })
+    .catch((err) => console.log(err));
 };
